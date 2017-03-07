@@ -1,9 +1,9 @@
-puts 'Введиту а'
-a = gets.chomp.to_i
-puts 'Введиту b'
-b = gets.chomp.to_i
-puts 'Введиту c'
-c = gets.chomp.to_i
+puts 'Введите а'
+a = gets.chomp.to_f
+puts 'Введите b'
+b = gets.chomp.to_f
+puts 'Введите c'
+c = gets.chomp.to_f
 
 sides = [a,b,c].sort
 

@@ -1,9 +1,9 @@
 puts 'Введите ваше имя'
-name = gets.chomp
+name = gets.chomp.to_i
 puts 'Введите ваш рост'
-growth = gets.chomp
+growth = gets.chomp.to_i
 
-weight = growth.to_i - 110
+weight = growth - 110
 
 if weight >= 0
   puts "#{name}, Ваш идеальный вес #{weight}"
