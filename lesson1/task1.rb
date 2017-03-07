@@ -1,5 +1,5 @@
 puts 'Введите ваше имя'
-name = gets.chomp.to_i
+name = gets.chomp
 puts 'Введите ваш рост'
 growth = gets.chomp.to_i
 
