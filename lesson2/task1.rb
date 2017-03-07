@@ -13,8 +13,4 @@ monthes = {
   'December' => 31
 }
 
-for month in monthes
-  if month[1] == 30
-    p month[0]
-  end
-end
+monthes.each { |m, d| p m if d == 30 }

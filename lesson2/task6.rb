@@ -3,7 +3,7 @@ bucket = {}
 loop do
   puts "Введите название товара"
   good = gets.chomp
-break if good == 'стоп'
+  break if good == 'стоп'
   puts "Введите цену"
   price = gets.chomp.to_f
   puts "Введите количество товара"

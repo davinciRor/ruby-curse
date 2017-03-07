@@ -12,7 +12,7 @@ if (year % 4 == 0 && year % 100 != 0) || year % 400 == 0
 end
 
 number_date = 0
-(0..month-1).to_a.each { |month_index| number_date += days[month_index] }
+(0..month-1).each { |month_index| number_date += days[month_index] }
 number_date -= days[month-1] - day
 
 p number_date
