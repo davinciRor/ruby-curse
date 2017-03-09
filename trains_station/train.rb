@@ -2,7 +2,7 @@ require_relative 'station'
 require_relative 'route'
 
 class Train
-  attr_accessor :speed, :carriage_count, :route, :current_station
+  attr_accessor :speed, :carriage_count, :route, :current_station_index
   attr_reader :number, :type, :route
 
   TYPE = [:passanger, :cargo]
@@ -13,7 +13,7 @@ class Train
     @carriage_count = carriage_count
     @speed = 0
     @route = nil
-    @current_station = nil
+    @current_station_index = 0
   end
 
   def accelerate(speed = 10)
@@ -34,33 +34,21 @@ class Train
 
   def add_route(route)
     self.route = route
-    self.current_station = route.first_station
-    self.route
+  end
+
+  def current_station
+    self.route.stations[current_station_index]
   end
 
   def next_station
-    next_station = nil
-    stations = self.route.list_stations
-    stations.each_with_index do |element, index|
-      if element == self.current_station
-        next_station = stations[index+1]
-      end
-    end
-    next_station
+    self.route.stations[current_station_index + 1]
   end
 
   def previus_station
-    prev_station = nil
-    stations = self.route.list_stations
-    stations.each_with_index do |element, index|
-      if element == self.current_station && index >= 1
-        prev_station = stations[index-1]
-      end
-    end
-    prev_station
+    self.route.stations[current_station_index - 1] if current_station_index >= 1
   end
 
   def move_to_next_station
-    self.current_station = next_station if next_station
+     self.current_station_index += 1 if next_station
   end
 end
