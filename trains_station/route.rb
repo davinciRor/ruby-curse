@@ -1,5 +1,5 @@
 class Route
-  attr_accessor :stations
+  attr_reader :stations
 
   def initialize(first_station, last_station)
     @stations = [first_station, last_station]
@@ -12,6 +12,10 @@ class Route
   def remove_station(station)
     self.stations.delete(station)
   end
+
+  private
+  # Нельзя менять масив станций из вне
+  attr_writer :stations
 
   def show
     puts self.stations.map(&:name)

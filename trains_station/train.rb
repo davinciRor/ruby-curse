@@ -2,15 +2,11 @@ require_relative 'station'
 require_relative 'route'
 
 class Train
-  attr_accessor :speed, :carriage_count, :route, :current_station_index
-  attr_reader :number, :type, :route
+  attr_reader :number, :speed, :route, :current_station_index, :carriages
 
-  TYPE = [:passanger, :cargo]
-
-  def initialize(number, type, carriage_count = 1)
+  def initialize(number)
     @number = number
-    @type = type
-    @carriage_count = carriage_count
+    @carriages = []
     @speed = 0
     @route = nil
     @current_station_index = 0
@@ -24,12 +20,12 @@ class Train
     self.speed = speed
   end
 
-  def add_carriage
-    self.carriage_count += 1 if speed == 0
+  def add_carriage(carriage)
+    self.carriages << carriage if speed == 0 && carriage.type == type
   end
 
   def remove_carriage
-    self.carriage_count -= 1 if speed == 0 && carriage_count > 1
+    self.carriages.delete_at(-1) if speed == 0
   end
 
   def add_route(route)
@@ -51,4 +47,12 @@ class Train
   def move_to_next_station
      self.current_station_index += 1 if next_station
   end
+
+  def type
+    raise NotImplementedError, 'Sorry, you have to override type'
+  end
+
+  private
+
+  attr_writer :speed, :route, :current_station_index, :carriages
 end
