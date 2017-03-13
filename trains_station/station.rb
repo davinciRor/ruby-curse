@@ -11,16 +11,11 @@ class Station
   end
 
   def trains_list
-    puts self.trains.map(&:number)
+    self.trains.map(&:number).join(' ')
   end
 
   def trains_list_by_type(type)
-    case type
-    when :cargo
-      self.trains.select { |c_train| c_train.type == :cargo }
-    when :passenger
-      self.trains.select { |c_train| c_train.type == :passenger }
-    end
+    self.trains.select { |c_train| c_train.type == type }.join(' ')
   end
 
   def remove_train(train)
