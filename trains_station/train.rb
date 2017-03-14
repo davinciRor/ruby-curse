@@ -1,7 +1,9 @@
-require_relative 'station'
-require_relative 'route'
+require_relative 'company'
 
 class Train
+  include Company
+  @@instanses = []
+
   attr_reader :number, :speed, :route, :current_station_index, :carriages
 
   def initialize(number)
@@ -10,6 +12,7 @@ class Train
     @speed = 0
     @route = nil
     @current_station_index = 0
+    @@instanses << self
   end
 
   def accelerate(speed = 10)
@@ -50,6 +53,16 @@ class Train
 
   def type
     raise NotImplementedError, 'Sorry, you have to override type'
+  end
+
+  class << self
+    def all
+      @@instanses
+    end
+
+    def find(number)
+      @@instanses.select { |train| train.number == number }.first
+    end
   end
 
   private
