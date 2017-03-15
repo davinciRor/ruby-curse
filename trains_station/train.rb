@@ -2,7 +2,7 @@ require_relative 'company'
 
 class Train
   include Company
-  @@instanses = []
+  @@instanses = {}
 
   attr_reader :number, :speed, :route, :current_station_index, :carriages
 
@@ -12,7 +12,7 @@ class Train
     @speed = 0
     @route = nil
     @current_station_index = 0
-    @@instanses << self
+    @@instanses[number] = self
   end
 
   def accelerate(speed = 10)
@@ -61,7 +61,7 @@ class Train
     end
 
     def find(number)
-      @@instanses.select { |train| train.number == number }.first
+      @@instanses[number]
     end
   end
 
