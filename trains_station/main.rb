@@ -128,6 +128,9 @@ class Main
     else
       "Не верный выбор"
     end
+  rescue => e
+    puts e.message
+    retry
   end
 
   def create_station

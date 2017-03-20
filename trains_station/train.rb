@@ -4,6 +4,8 @@ class Train
   include Company
   @@instanses = {}
 
+  NUMBER_FORMAT = /^(\d|[a-z]){3}-?((\d{2})|([a-z]{2}))$/i
+
   attr_reader :number, :speed, :route, :current_station_index, :carriages
 
   def initialize(number)
@@ -12,6 +14,7 @@ class Train
     @speed = 0
     @route = nil
     @current_station_index = 0
+    validate!
     @@instanses[number] = self
   end
 
@@ -55,6 +58,12 @@ class Train
     raise NotImplementedError, 'Sorry, you have to override type'
   end
 
+  def valid?
+    validate!
+  rescue
+    false
+  end
+
   class << self
     def all
       @@instanses
@@ -65,7 +74,13 @@ class Train
     end
   end
 
-  private
+  protected
 
   attr_writer :speed, :route, :current_station_index, :carriages
+
+  def validate!
+    raise 'Number can`t be nil' if number.nil?
+    raise 'Number has invalid format' if number !~ NUMBER_FORMAT
+    true
+  end
 end

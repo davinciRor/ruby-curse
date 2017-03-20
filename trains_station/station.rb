@@ -5,6 +5,7 @@ class Station
   def initialize(name)
     @name = name
     @trains = []
+    validate!
     @@instanses << self
   end
 
@@ -24,6 +25,12 @@ class Station
     self.trains.delete(train)
   end
 
+  def valid?
+    validate!
+  rescue
+    false
+  end
+
   class << self
     def all
       @@instanses
@@ -33,4 +40,10 @@ class Station
   private
   # Нельзя менять масив поездов на станции из вне
   attr_writer :trains
+
+  def validate!
+    raise 'Name can`t be nil' if name.nil?
+    raise 'Name should be at least 2 symbols' if name.length < 2
+    true
+  end
 end
