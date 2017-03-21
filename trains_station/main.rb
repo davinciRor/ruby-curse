@@ -34,6 +34,8 @@ class Main
         add_train_to_station
       when 6
         trains_on_station
+      when 7
+        take_place_or_volume
       else
         puts "Не верный выбор"
       end
@@ -41,14 +43,76 @@ class Main
     end
   end
 
+  def test_data
+    s1 = Station.new('s1')
+    t1 = PassengerTrain.new('333-dd')
+    t2 = CargoTrain.new('443-dd')
+    s2 = Station.new('s2')
+    t3 = PassengerTrain.new('ddd-dd')
+    t4 = CargoTrain.new('ccc-dd')
+    10.times do |count|
+      if count > 5
+        t1.add_carriage(PassengerCarriage.new(4*count, "COMPANY_BELIVE"))
+      else
+        t2.add_carriage(CargoCarriage.new(100*count, "CARGOCOMPANY"))
+      end
+    end
+    s1.add_train(t1)
+    s1.add_train(t2)
+    s2.add_train(t3)
+    s2.add_train(t4)
+    Station.all.each do |station|
+      puts "#{station.name}: "
+      station_info
+    end
+  end
+
   private
 
   attr_writer :stations, :trains
 
+  def take_place_or_volume
+    train = choose_train
+    puts "Number: #{train.number}, Type: #{train.type}, Carriages: #{train.carriages.count}"
+    i = 1
+    train.each_carriage do |carriage|
+      puts "#{i}: #{carriage.info}"
+      i += 1
+    end
+    puts 'Choose carriage by number'
+    carriage_index = gets.chomp.to_i
+    carriage = train.carriages[carriage_index-1]
+    case carriage.type
+    when :passenger
+      carriage.take_a_seat
+      puts "Вы заняли 1 место"
+    when :cargo
+      puts "Введите обьем который хотите занять! Свободно: #{carriage.available_volume}"
+      volume = gets.chomp.to_i
+      if carriage.taken_volume(volume)
+        puts "Вы заняли обьем #{volume}"
+      else
+        puts "Вы не можете занять столько обьема"
+      end
+    end
+  end
+
   def trains_on_station
     station = choose_station
     return puts "Нет такой станции" unless station
-    puts "Список поездов на станции #{station.name}: #{station.trains_list}"
+    puts "Список поездов на станции #{station.name}:"
+    station_info(station)
+  end
+
+  def station_info(station)
+    station.each_train do |train|
+      puts "Number: #{train.number}, Type: #{train.type}, Carriages: #{train.carriages.count}"
+      i = 1
+      train.each_carriage do |carriage|
+        puts "#{i}: #{carriage.info}"
+        i += 1
+      end
+    end
   end
 
   def add_train_to_station
@@ -87,11 +151,17 @@ class Main
   def add_carriage
     train = choose_train
     if train
+      puts "Введите название компании"
+      company_name = gets.chomp
       case train.type
       when :passenger
-        train.add_carriage(PassengerCarriage.new)
+        puts "Введите количество мест"
+        seats = gets.chomp.to_i
+        train.add_carriage(PassengerCarriage.new(seats, company_name))
       when :cargo
-        train.add_carriage(CargoCarriage.new)
+        puts "Введите обьем"
+        volume = gets.chomp.to_i
+        train.add_carriage(CargoCarriage.new(volume, company_name))
       end
       puts "Вагон успешно добавлен!"
     else
@@ -158,9 +228,10 @@ class Main
 4 - Отцеплять вагоны от поезда
 5 - Помещать поезда на станцию
 6 - Просматривать список станций и список поездов на станции
+7 - Занять место или обьем в вагоне
 ВВЕДИТЕ НОМЕР:)
     gets.chomp.to_i
   end
 end
-
 Main.new.text_ui
+#Main.new.test_data

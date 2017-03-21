@@ -25,6 +25,10 @@ class Station
     self.trains.delete(train)
   end
 
+  def each_train(&block)
+    self.trains.each { |train| block.(train) }
+  end
+
   def valid?
     validate!
   rescue

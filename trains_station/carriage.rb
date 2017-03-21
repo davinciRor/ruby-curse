@@ -1,4 +1,5 @@
 require_relative 'company'
+require 'pry'
 
 class Carriage
   include Company
@@ -10,6 +11,10 @@ class Carriage
 
   def type
     raise NotImplementedError, 'Sorry you need override type'
+  end
+
+  def info
+    raise NotImplementedError, 'Sorry you need override info'
   end
 
   def valid?

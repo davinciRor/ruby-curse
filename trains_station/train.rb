@@ -54,6 +54,10 @@ class Train
      self.current_station_index += 1 if next_station
   end
 
+  def each_carriage(&block)
+    self.carriages.each { |carriage| block.(carriage) }
+  end
+
   def type
     raise NotImplementedError, 'Sorry, you have to override type'
   end
