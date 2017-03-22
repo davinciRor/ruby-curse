@@ -8,8 +8,17 @@ require_relative 'passenger_carriage'
 require_relative 'passenger_train'
 require 'pry'
 
-
+# Text UI
 class Main
+  ACTIONS = {
+    1 => :create_station,
+    2 => :create_train,
+    3 => :add_carriage,
+    4 => :remove_station,
+    5 => :add_train_to_station,
+    6 => :trains_on_station,
+    7 => :take_place_or_volume
+  }
   attr_reader :stations, :trains
 
   def initialize
@@ -20,26 +29,9 @@ class Main
   def text_ui
     loop do
       action = choose_action
-      break if action == 0
-      case action
-      when 1
-        create_station
-      when 2
-        create_train
-      when 3
-        add_carriage
-      when 4
-        remove_carriage
-      when 5
-        add_train_to_station
-      when 6
-        trains_on_station
-      when 7
-        take_place_or_volume
-      else
-        puts "Не верный выбор"
-      end
-      puts "Введите следующее действие"
+      break if action.zero?
+      self.send(ACTIONS[action]) rescue puts 'Не правильно введен номер'
+      puts 'Введите следующее действие'
     end
   end
 
@@ -52,9 +44,9 @@ class Main
     t4 = CargoTrain.new('ccc-dd')
     10.times do |count|
       if count > 5
-        t1.add_carriage(PassengerCarriage.new(4*count, "COMPANY_BELIVE"))
+        t1.add_carriage(PassengerCarriage.new(4 * count, 'COMPANY_BELIVE'))
       else
-        t2.add_carriage(CargoCarriage.new(100*count, "CARGOCOMPANY"))
+        t2.add_carriage(CargoCarriage.new(100 * count, 'CARGOCOMPANY'))
       end
     end
     s1.add_train(t1)
@@ -81,25 +73,25 @@ class Main
     end
     puts 'Choose carriage by number'
     carriage_index = gets.chomp.to_i
-    carriage = train.carriages[carriage_index-1]
+    carriage = train.carriages[carriage_index - 1]
     case carriage.type
     when :passenger
       carriage.take_a_seat
-      puts "Вы заняли 1 место"
+      puts 'Вы заняли 1 место'
     when :cargo
       puts "Введите обьем который хотите занять! Свободно: #{carriage.available_volume}"
       volume = gets.chomp.to_i
       if carriage.taken_volume(volume)
         puts "Вы заняли обьем #{volume}"
       else
-        puts "Вы не можете занять столько обьема"
+        puts 'Вы не можете занять столько обьема'
       end
     end
   end
 
   def trains_on_station
     station = choose_station
-    return puts "Нет такой станции" unless station
+    return puts 'Нет такой станции' unless station
     puts "Список поездов на станции #{station.name}:"
     station_info(station)
   end
@@ -117,26 +109,26 @@ class Main
 
   def add_train_to_station
     station = choose_station
-    return puts "Нет такой станции" unless station
+    return puts 'Нет такой станции' unless station
     train = choose_train
-    return puts "Нет такого поезда" unless train
+    return puts 'Нет такого поезда' unless train
     station.add_train(train)
     puts "Поезд #{train.number} успешно добавлен на станцию #{station.name}!"
   end
 
   def choose_station
     puts "Список станций: #{stations_list}"
-    puts "Введите имя станции"
+    puts 'Введите имя станции'
     station_name = gets.chomp
     station_by_name(station_name)
   end
 
   def stations_list
-    self.stations.map(&:name).join(' ')
+    stations.map(&:name).join(' ')
   end
 
   def station_by_name(name)
-    self.stations.select{ |station| station.name == name }.first
+    stations.select { |station| station.name == name }.first
   end
 
   def remove_carriage
@@ -151,27 +143,27 @@ class Main
   def add_carriage
     train = choose_train
     if train
-      puts "Введите название компании"
+      puts 'Введите название компании'
       company_name = gets.chomp
       case train.type
       when :passenger
-        puts "Введите количество мест"
+        puts 'Введите количество мест'
         seats = gets.chomp.to_i
         train.add_carriage(PassengerCarriage.new(seats, company_name))
       when :cargo
-        puts "Введите обьем"
+        puts 'Введите обьем'
         volume = gets.chomp.to_i
         train.add_carriage(CargoCarriage.new(volume, company_name))
       end
-      puts "Вагон успешно добавлен!"
+      puts 'Вагон успешно добавлен!'
     else
-      puts "Поезд не найден"
+      puts 'Поезд не найден'
     end
   end
 
   def choose_train
     puts "Список поездов: #{trains_list}"
-    puts "Введите номер поезда"
+    puts 'Введите номер поезда'
     train_number = gets.chomp
     train_by_number(train_number)
   end
@@ -181,22 +173,22 @@ class Main
   end
 
   def create_train
-    puts %q(Введите тип поезда который хотите создать!
+    puts 'Введите тип поезда который хотите создать!
       1 - Пасажирский
       2 - Товарный
-    )
+    '
     train_type = gets.chomp.to_i
-    puts "Введите номер поезда"
+    puts 'Введите номер поезда'
     train_number = gets.chomp
     case train_type
     when 1
-      self.trains << PassengerTrain.new(train_number)
+      trains << PassengerTrain.new(train_number)
       puts "Пасажирский поезд успешно создан c номером #{train_number}!"
     when 2
-      self.trains << CargoTrain.new(train_number)
+      trains << CargoTrain.new(train_number)
       puts "Грузовой поезд успешно создан c номером #{train_number}!"
     else
-      "Не верный выбор"
+      'Не верный выбор'
     end
   rescue => e
     puts e.message
@@ -204,22 +196,22 @@ class Main
   end
 
   def create_station
-    puts "Введите имя станции!"
+    puts 'Введите имя станции!'
     station_name = gets.chomp
-    self.stations << Station.new(station_name)
+    stations << Station.new(station_name)
     puts "Станция #{station_name} успешно создана!"
   end
 
   def trains_list(type = nil)
     if type
-      self.trains.map{ |t| t.number if t.type == type }.compact.join(' ')
+      trains.map { |t| t.number if t.type == type }.compact.join(' ')
     else
-      self.trains.map(&:number).join(' ')
+      trains.map(&:number).join(' ')
     end
   end
 
   def choose_action
-    puts %Q(
+    puts %(
 Список действий
 0 - Выход
 1 - Создавать станции
@@ -234,4 +226,4 @@ class Main
   end
 end
 Main.new.text_ui
-#Main.new.test_data
+# Main.new.test_data

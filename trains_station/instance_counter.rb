@@ -1,15 +1,18 @@
 require 'pry'
 
+# Module for count instance of class
 module InstanceCounter
   def self.included(base)
     base.extend ClassMethods
     base.send :include, InstanceMethods
   end
 
+  # Module for class methods
   module ClassMethods
     attr_accessor :instances
   end
 
+  # Module for instance methods
   module InstanceMethods
     protected
 
@@ -19,25 +22,3 @@ module InstanceCounter
     end
   end
 end
-
-class A
-  include InstanceCounter
-
-  def initialize
-    register_instance
-  end
-end
-
-class B
-  include InstanceCounter
-
-  def initialize
-    self.register_instance
-  end
-end
-
-A.new
-A.new
-B.new
-puts B.instances
-puts A.instances

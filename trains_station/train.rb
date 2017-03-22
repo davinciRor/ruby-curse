@@ -1,8 +1,9 @@
 require_relative 'company'
 
+# Describe Train
 class Train
   include Company
-  @@instanses = {}
+  @instanses = {}
 
   NUMBER_FORMAT = /^(\d|[a-z]){3}-?((\d{2})|([a-z]{2}))$/i
 
@@ -15,7 +16,7 @@ class Train
     @route = nil
     @current_station_index = 0
     validate!
-    @@instanses[number] = self
+    instanses[number] = self
   end
 
   def accelerate(speed = 10)
@@ -27,11 +28,11 @@ class Train
   end
 
   def add_carriage(carriage)
-    self.carriages << carriage if speed == 0 && carriage.type == type
+    carriages << carriage if speed.zero? && carriage.type == type
   end
 
   def remove_carriage
-    self.carriages.delete_at(-1) if speed == 0
+    carriages.delete_at(-1) if speed.zero?
   end
 
   def add_route(route)
@@ -39,23 +40,23 @@ class Train
   end
 
   def current_station
-    self.route.stations[current_station_index]
+    route.stations[current_station_index]
   end
 
   def next_station
-    self.route.stations[current_station_index + 1]
+    route.stations[current_station_index + 1]
   end
 
   def previus_station
-    self.route.stations[current_station_index - 1] if current_station_index >= 1
+    route.stations[current_station_index - 1] if current_station_index >= 1
   end
 
   def move_to_next_station
-     self.current_station_index += 1 if next_station
+    self.current_station_index += 1 if next_station
   end
 
-  def each_carriage(&block)
-    self.carriages.each { |carriage| block.(carriage) }
+  def each_carriage
+    carriages.each { |carriage| yield(carriage) }
   end
 
   def type
@@ -68,13 +69,19 @@ class Train
     false
   end
 
+  def instanses
+    self.class.instanses
+  end
+
   class << self
+    attr_reader :instanses
+
     def all
-      @@instanses
+      instanses
     end
 
     def find(number)
-      @@instanses[number]
+      instanses[number]
     end
   end
 

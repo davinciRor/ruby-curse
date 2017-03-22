@@ -1,6 +1,7 @@
 require_relative 'company'
 require 'pry'
 
+# Describe Carriage
 class Carriage
   include Company
 
@@ -26,6 +27,6 @@ class Carriage
   protected
 
   def validate!
-    raise "Company Name can`t be nil" if company_name.nil?
+    raise 'Company Name can`t be nil' if company_name.nil?
   end
 end

@@ -1,3 +1,4 @@
+# Describe Route
 class Route
   attr_reader :stations
 
@@ -6,18 +7,18 @@ class Route
   end
 
   def add_station(station)
-    self.stations.insert(-2, station)
+    stations.insert(-2, station)
   end
 
   def remove_station(station)
-    self.stations.delete(station)
+    stations.delete(station)
   end
 
   private
-  # Нельзя менять масив станций из вне
+
   attr_writer :stations
 
   def show
-    puts self.stations.map(&:name)
+    puts stations.map(&:name)
   end
 end

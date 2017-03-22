@@ -1,32 +1,33 @@
+# Describe station
 class Station
   attr_reader :trains, :name
-  @@instanses = []
+  @instanses = []
 
   def initialize(name)
     @name = name
     @trains = []
     validate!
-    @@instanses << self
+    instanses << self
   end
 
   def add_train(train)
-    self.trains << train
+    trains << train
   end
 
   def trains_list
-    self.trains.map(&:number).join(' ')
+    trains.map(&:number).join(' ')
   end
 
   def trains_list_by_type(type)
-    self.trains.select { |c_train| c_train.type == type }.join(' ')
+    trains.select { |c_train| c_train.type == type }.join(' ')
   end
 
   def remove_train(train)
-    self.trains.delete(train)
+    trains.delete(train)
   end
 
-  def each_train(&block)
-    self.trains.each { |train| block.(train) }
+  def each_train
+    trains.each { |train| yield(train) }
   end
 
   def valid?
@@ -35,14 +36,20 @@ class Station
     false
   end
 
+  def instanses
+    self.class.instanses
+  end
+
   class << self
+    attr_reader :instanses
+
     def all
-      @@instanses
+      instanses
     end
   end
 
   private
-  # Нельзя менять масив поездов на станции из вне
+
   attr_writer :trains
 
   def validate!

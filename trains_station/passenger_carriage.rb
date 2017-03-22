@@ -1,3 +1,4 @@
+# Describe PassengerCarriage
 class PassengerCarriage < Carriage
   attr_reader :seats_count, :taken_seats
 
@@ -8,11 +9,11 @@ class PassengerCarriage < Carriage
   end
 
   def take_a_seat
-    self.taken_seats += 1 if self.taken_seats < self.seats_count
+    self.taken_seats += 1 if taken_seats < seats_count
   end
 
   def free_seats_count
-    self.seats_count - self.taken_seats
+    seats_count - self.taken_seats
   end
 
   def type
@@ -28,8 +29,8 @@ class PassengerCarriage < Carriage
   attr_writer :taken_seats
 
   def validate!
-    raise "Company Name can`t be nil" if company_name.nil?
+    raise 'Company Name can`t be nil' if company_name.nil?
     raise 'Seats count can`t be nil' if seats_count.nil?
-    raise 'Seats count must be number' if seats_count.class != Fixnum
+    raise 'Seats count must be number' if seats_count.class != Integer
   end
 end
