@@ -1,6 +1,11 @@
 # Describe station
 class Station
+  include Validation
+
   attr_reader :trains, :name
+
+  validate :name, :presence
+
   @instanses = []
 
   def initialize(name)
@@ -30,12 +35,6 @@ class Station
     trains.each { |train| yield(train) }
   end
 
-  def valid?
-    validate!
-  rescue
-    false
-  end
-
   def instanses
     self.class.instanses
   end
@@ -51,10 +50,4 @@ class Station
   private
 
   attr_writer :trains
-
-  def validate!
-    raise 'Name can`t be nil' if name.nil?
-    raise 'Name should be at least 2 symbols' if name.length < 2
-    true
-  end
 end

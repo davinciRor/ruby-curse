@@ -2,6 +2,9 @@
 class PassengerCarriage < Carriage
   attr_reader :seats_count, :taken_seats
 
+  validate :seats_count, :presence
+  validate :seats_count, :type, Fixnum
+
   def initialize(seats_count, company_name)
     @seats_count = seats_count
     @taken_seats = 0
@@ -27,10 +30,4 @@ class PassengerCarriage < Carriage
   protected
 
   attr_writer :taken_seats
-
-  def validate!
-    raise 'Company Name can`t be nil' if company_name.nil?
-    raise 'Seats count can`t be nil' if seats_count.nil?
-    raise 'Seats count must be number' if seats_count.class != Integer
-  end
 end

@@ -3,11 +3,16 @@ require_relative 'company'
 # Describe Train
 class Train
   include Company
+  include Validation
+
   @instanses = {}
 
   NUMBER_FORMAT = /^(\d|[a-z]){3}-?((\d{2})|([a-z]{2}))$/i
 
   attr_reader :number, :speed, :route, :current_station_index, :carriages
+
+  validate :number, :format, NUMBER_FORMAT
+  validate :number, :presence
 
   def initialize(number)
     @number = number
@@ -63,12 +68,6 @@ class Train
     raise NotImplementedError, 'Sorry, you have to override type'
   end
 
-  def valid?
-    validate!
-  rescue
-    false
-  end
-
   def instanses
     self.class.instanses
   end
@@ -88,10 +87,4 @@ class Train
   protected
 
   attr_writer :speed, :route, :current_station_index, :carriages
-
-  def validate!
-    raise 'Number can`t be nil' if number.nil?
-    raise 'Number has invalid format' if number !~ NUMBER_FORMAT
-    true
-  end
 end

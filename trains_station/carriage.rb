@@ -4,6 +4,9 @@ require 'pry'
 # Describe Carriage
 class Carriage
   include Company
+  include Validation
+
+  validate :company_name, :presence
 
   def initialize(company_name)
     @company_name = company_name
@@ -16,17 +19,5 @@ class Carriage
 
   def info
     raise NotImplementedError, 'Sorry you need override info'
-  end
-
-  def valid?
-    validate!
-  rescue
-    false
-  end
-
-  protected
-
-  def validate!
-    raise 'Company Name can`t be nil' if company_name.nil?
   end
 end
