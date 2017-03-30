@@ -6,7 +6,6 @@ module Accessor
   module ClassMethods
     def attr_accessor_with_history(*methods)
       methods.each do |method|
-        raise TypeError.new("method name  is not symbol") unless method.is_a?(Symbol)
         var_name = "@#{method}"
         var_name_history = "@#{method}_history"
 
@@ -27,7 +26,6 @@ module Accessor
     end
 
     def strong_attr_accessor(method, klass)
-      raise TypeError.new("method name  is not symbol") unless method.is_a?(Symbol)
       var_name = "@#{method}"
 
       define_method(method) do
@@ -45,5 +43,5 @@ end
 class A
   include Accessor
   attr_accessor_with_history :name, :age
-  strong_attr_accessor :level, Fixnum
+  strong_attr_accessor 'level', Fixnum
 end

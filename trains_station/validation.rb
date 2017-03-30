@@ -7,14 +7,10 @@ module Validation
   module ClassMethods
     def validate(attribute_name, validation_type, option = true)
       if validates_hash[attribute_name]
-        if validates_hash[attribute_name][validation_type]
-          puts "Worning!!! You use same validation"
-        else
-          validates_hash[attribute_name][validation_type] = {
-            option: option,
-            error_message: validation_errors(validation_type, attribute_name)
-          }
-        end
+        validates_hash[attribute_name][validation_type] = {
+          option: option,
+          error_message: validation_errors(validation_type, attribute_name)
+        }
       else
         validates_hash[attribute_name] = {
           validation_type => {
@@ -51,14 +47,7 @@ module Validation
     def validate!
       self.class.validates_hash.each do |attr_name, value|
         value.each do |key, value|
-          case key
-          when :presence
-            raise value[:error_message] if [nil, ''].include?(self.public_send(attr_name))
-          when :format
-            raise value[:error_message] if self.public_send(attr_name) !~ value[:option]
-          when :type
-            raise value[:error_message] unless self.public_send(attr_name).is_a? value[:option]
-          end
+          self.send("#{key}_validation", value[:error_message], attr_name, value[:option])
         end
       end
       true
@@ -68,6 +57,20 @@ module Validation
       validate!
     rescue
       false
+    end
+
+    protected
+
+    def presence_validation(error_message, attr_name, option = true)
+      raise error_message if [nil, ''].include?(self.public_send(attr_name))
+    end
+
+    def format_validation(error_message, attr_name, option)
+      raise error_message if self.public_send(attr_name) !~ option
+    end
+
+    def type_validation(error_message, attr_name, option)
+      raise error_message unless self.public_send(attr_name).is_a? option
     end
   end
 end
